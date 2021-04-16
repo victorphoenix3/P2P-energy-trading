@@ -6,25 +6,25 @@ contract P2P {
     struct buyerData {
         address id;
         uint tag;
-        uint energyAmt;       
+        uint energyAmt;
     }
-   
-    struct sellerData{
+
+    struct sellerData {
         address id;
         uint tag;
         uint bid;
         uint energyAmt;
-       
     }
+
     struct pair {
         uint price;
         uint energy;
     }
     pair[] cutoff;
-   
+
     sellerData[] sellers;
     buyerData[] buyers;
-   
+
     function seller(sellerData memory requester) public {
         sellers.push(requester);
         pair memory cutoffInfo;
@@ -32,27 +32,25 @@ contract P2P {
         cutoffInfo.energy = requester.energyAmt;
         cutoff.push(cutoffInfo);
     }
-   
+
     function buyer(buyerData memory requester) public {
         buyers.push(requester);
     }
-   
-    function sellingPrice(uint requiredEnergy) public view returns (uint){
+
+    function sellingPrice(uint requiredEnergy) public view returns (uint) {
         uint n = cutoff.length;
         uint i = 0;
         uint totalEnergy = 0;
         while (i<n && totalEnergy+cutoff[i].energy<=requiredEnergy) {
-            totalEnergy += cutoff[i].price;
+            totalEnergy += cutoff[i].energy;
             i++;
         }
         return cutoff[i-1].price;
     }
-    
+
     function clearMarket() public {
-        
         uint i=0;
         uint j=0;
-        
     
         for(i=0;i<buyers.length;i++)
         {
@@ -71,8 +69,6 @@ contract P2P {
                 }
              }
         }
-        
-         
         if (sellers.length>0 && buyers.length>0){
              for (i=0;i<buyers.length;i++){
                 for (j=0;j<sellers.length;j++){
@@ -82,16 +78,14 @@ contract P2P {
              }
         }
     }
-    function matchBid(uint buyerIndex, uint SellerIndex) public {
+
+    function matchBid(uint sellerIndex, uint buyerIndex) public {
         if(sellers.length==0 || buyers.length==0){
             return;
         }
         uint i = buyerIndex; 
-        uint j = SellerIndex;
+        uint j = sellerIndex;
         uint remainder =0; uint calcAmount = 0;
-        if(sellers[j].energyAmt ==0  || buyers[i].energyAmt==0){
-            return;
-        }
         if((sellers[j].energyAmt - buyers[i].energyAmt)>=0){
             remainder = sellers[j].energyAmt - buyers[i].energyAmt ;
             calcAmount = sellers[j].energyAmt - remainder ;
@@ -119,8 +113,6 @@ contract P2P {
         sellers[index] = sellers[sellers.length-1];
         sellers.pop();
     }
-
-    
 
     function removeBuyer(uint index) public {
         require(index < buyers.length, "inappropriate call");
