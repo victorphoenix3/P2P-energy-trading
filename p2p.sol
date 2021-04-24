@@ -37,6 +37,61 @@ contract P2P {
         buyers.push(requester);
     }
 
+	// Creating mapping
+	mapping (address => uint) result;
+	address[] seller_result;
+	address[] public sortedArray;
+	
+	function adding_values(address id, uint bid) public {
+        
+         bid = result[id];
+        seller_result.push(id) ;
+  
+    }
+	
+	function sort () public {
+    
+    /** Loop through the original array to sort it*/
+            for (uint i = 0; i < seller_result.length; i++) {
+    
+    /** Set the mapping to 0 initially. Later on all mapping entries will be the actual index +1.
+     ** This is done, because an element larger than all compared elements will keep its 0 mapping
+     ** throughout all comparisons and is assigned the new largest index in the end. If the acutal
+     ** idexes were used, an element smaller than all others might falsely be assigned the largest
+     ** index, because it got through the comparisons with mapping value 0.*/
+              //  result[i] = 0;
+    
+    /** Compare the current element to all items that have already been sorted*/
+                for (uint j = 0; j < i; j++){
+    
+    /** If the item is smaller that the item it is compared against, sort it accordingly.*/
+         if (result[seller_result[i]] < result[seller_result[j]]) {
+               address temp = seller_result[i];
+               seller_result[i] = seller_result[j];
+               seller_result[j]=temp;
+    
+            }
+    
+    /** Initialize the sortedArray to the same size as the testStructArray. Skip as many entries as
+     ** the sortedArray already has, otherwise the sortedArray would double in size each time the
+     ** function is called.*/
+            uint lengthSortedArray = sortedArray.length;
+            for (uint i = 0; i < seller_result.length; i++) {
+                if (i < lengthSortedArray) continue;
+                sortedArray.push(seller_result[i]);
+            }
+    /*
+    // Go over the testStructArray and copy the items to sortedArray to the positions specified in
+      the helper mapping. At this point subtract the added 1, to get the real index 
+            for (uint i = 0; i < seller_result.length; i++) {
+                sortedArray[result[i]] = seller_result[i];
+            }
+    */
+        }
+        
+    }   
+}
+
     function sellingPrice(uint requiredEnergy) public view returns (uint) {
         uint n = cutoff.length;
         uint i = 0;
