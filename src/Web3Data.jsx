@@ -24,9 +24,11 @@ const requestAuth = async web3Context => {
 const requestAccess = useCallback(() => requestAuth(web3Context), []);
 
 return (
+
 <div>
-<h3> {props.title} </h3>
-	<div>
+<br/>
+<br/>	
+<div>
     Network: {networkId ? `${networkId} – ${networkName}` : 'No connection'}
     </div>
 	<div>
